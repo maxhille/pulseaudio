@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net"
 	"os"
 	"os/user"
@@ -59,7 +60,7 @@ type Client struct {
 	conn        net.Conn
 	clientIndex int
 	packets     chan packet
-	updates     chan struct{}
+	updates     chan SubscriptionEvent
 }
 
 // NewClient establishes a connection to the PulseAudio server.
@@ -74,7 +75,7 @@ func NewClient() (*Client, error) {
 	c := &Client{
 		conn:    conn,
 		packets: make(chan packet),
-		updates: make(chan struct{}, 1),
+		updates: make(chan SubscriptionEvent, 1),
 	}
 
 	go c.processPackets()
@@ -174,9 +175,11 @@ loop:
 				panic(err)
 			}
 			if rsp == commandSubscribeEvent && tag == 0xffffffff {
-				select {
-				case c.updates <- struct{}{}:
-				default:
+				ev, err := newSubscriptionEvent(buff)
+				if err != nil {
+					log.Print("could not parse subscription event")
+				} else {
+					c.updates <- ev
 				}
 				continue
 			}
