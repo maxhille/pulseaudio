@@ -1,13 +1,21 @@
-package pulseaudio
+package main
 
 import (
 	"fmt"
 	"time"
+
+	"github.com/mafik/pulseaudio"
 )
 
+func main() {
+	Example()
+	ExampleClient_SetVolume()
+	ExampleClient_Updates()
+}
+
 // clientForTest creates a new client and ensures that there is an active output.
-func clientForTest() *Client {
-	c, err := NewClient()
+func clientForTest() *pulseaudio.Client {
+	c, err := pulseaudio.NewClient()
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +43,7 @@ func clientForTest() *Client {
 }
 
 func Example() {
-	client, err := NewClient()
+	client, err := pulseaudio.NewClient()
 	if err != nil {
 		panic(err)
 	}
