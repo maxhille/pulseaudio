@@ -12,7 +12,7 @@ func main() {
 		log.Fatalf("could not create client: %v", err)
 	}
 
-	uc, err := c.Updates()
+	uc, err := c.Updates(pulseaudio.SubscriptionMaskAll)
 	if err != nil {
 		log.Fatalf("could not subscribe: %v", err)
 	}

@@ -24,6 +24,21 @@ const (
 	SubscriptionEventTypeMask     = 0x0030
 )
 
+const (
+	SubscriptionMaskNull         = 0x0000
+	SubscriptionMaskSink         = 0x0001
+	SubscriptionMaskSource       = 0x0002
+	SubscriptionMaskSinkInput    = 0x0004
+	SubscriptionMaskSourceOutput = 0x0008
+	SubscriptionMaskModule       = 0x0010
+	SubscriptionMaskClient       = 0x0020
+	SubscriptionMaskSampleCache  = 0x0040
+	SubscriptionMaskServer       = 0x0080
+	SubscriptionMaskAutoload     = 0x0100
+	SubscriptionMaskCard         = 0x0200
+	SubscriptionMaskAll          = 0x02ff
+)
+
 type SubscriptionEvent struct {
 	Type   int32
 	Client int32
@@ -39,9 +54,8 @@ func newSubscriptionEvent(buf *bytes.Buffer) (se SubscriptionEvent, err error) {
 }
 
 // Updates returns a channel with PulseAudio updates.
-func (c *Client) Updates() (updates <-chan SubscriptionEvent, err error) {
-	const subscriptionMaskAll = 0x02ff
-	_, err = c.request(commandSubscribe, uint32Tag, uint32(subscriptionMaskAll))
+func (c *Client) Updates(mask int32) (updates <-chan SubscriptionEvent, err error) {
+	_, err = c.request(commandSubscribe, uint32Tag, mask)
 	if err != nil {
 		return nil, err
 	}
