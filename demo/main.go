@@ -19,6 +19,12 @@ func main() {
 
 	for {
 		ev := <-uc
-		log.Printf("Event: %x on index #%d", ev.Type, ev.Index)
+		if ev.Type != pulseaudio.SubscriptionEventChange|
+			pulseaudio.SubscriptionEventSink {
+			continue
+		}
+		log.Printf("Event 'change' on sink #%d", ev.Index)
+		vol, _ := c.Volume()
+		log.Printf("Volume is %d%%", int(vol*100))
 	}
 }
