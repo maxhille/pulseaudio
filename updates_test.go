@@ -8,7 +8,7 @@ import (
 func TestNewSubscriptionEvent(t *testing.T) {
 	buf := bytes.NewBuffer([]byte{
 		0x4c,
-		0x00, 0x00, 0x00, 0x10,
+		0x00, 0x00, 0x00, 0x25,
 		0x4c,
 		0x00, 0x00, 0x00, 0x62,
 	})
@@ -18,12 +18,12 @@ func TestNewSubscriptionEvent(t *testing.T) {
 		t.Fatalf("expected no error, but got %v", err)
 	}
 
-	if se.Type != SubscriptionEventChange {
+	if se.Type != SubscriptionEventRemove|SubscriptionEventClient {
 		t.Errorf("expected SubscriptionEventChange, but got %x",
 			se.Type)
 	}
 
-	if se.Client != 98 {
-		t.Errorf("expected #98, but got %d", se.Client)
+	if se.Index != 98 {
+		t.Errorf("expected #98, but got %d", se.Index)
 	}
 }

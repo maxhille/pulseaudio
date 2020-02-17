@@ -40,8 +40,8 @@ const (
 )
 
 type SubscriptionEvent struct {
-	Type   int32
-	Client int32
+	Type  int32
+	Index int32
 }
 
 func newSubscriptionEvent(buf *bytes.Buffer) (se SubscriptionEvent, err error) {
@@ -49,7 +49,7 @@ func newSubscriptionEvent(buf *bytes.Buffer) (se SubscriptionEvent, err error) {
 	_, err = r.Seek(1, io.SeekStart)
 	err = binary.Read(r, binary.BigEndian, &se.Type)
 	_, err = r.Seek(6, io.SeekStart)
-	err = binary.Read(r, binary.BigEndian, &se.Client)
+	err = binary.Read(r, binary.BigEndian, &se.Index)
 	return
 }
 

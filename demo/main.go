@@ -19,6 +19,6 @@ func main() {
 
 	for {
 		ev := <-uc
-		log.Printf("Event: %x on client #%d", ev.Type, ev.Client)
+		log.Printf("Event: %x on index #%d", ev.Type, ev.Index)
 	}
 }
